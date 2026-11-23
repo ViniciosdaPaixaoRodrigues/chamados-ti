@@ -1,11 +1,12 @@
 // =========================================================
 //  HelpDesk TI — Lógica do Dashboard & Autenticação de Perfil
+//  Salvar em: public/js/dashboard.js
 // =========================================================
 
 (function () {
   'use strict';
 
-  // CONFIGURAÇÃO DO FIREBASE
+  // 1. CONFIGURAÇÃO DO FIREBASE (credenciais do seu projeto)
   const firebaseConfig = {
     apiKey: "AIzaSyBe1rlrucH_b34RBut3o5F-SrphZeI-etQ",
     authDomain: "chamados-ti-2ab4f.firebaseapp.com",
@@ -45,7 +46,8 @@
 
       if (docSnap.exists) {
         const data = docSnap.data();
-        perfil = data.perfil || 'user';
+        // **NORMALIZAÇÃO** – garante que "Admin", "ADMIN", "admin" sejam equivalentes
+        perfil = (data.perfil || 'user').toString().toLowerCase();
         setor = data.setor || 'Geral';
         nome = data.nome || nome;
       } else {
@@ -95,6 +97,12 @@
     if (modalBadge) {
       modalBadge.className = 'profile-badge badge-' + perfil;
       modalBadge.textContent = perfil;
+    }
+
+    // **EXIBE** menu de Gestão de Usuários na sidebar para admin
+    const adminNav = document.getElementById('adminNavSection');
+    if (adminNav) {
+      adminNav.style.display = (perfil === 'admin') ? 'block' : 'none';
     }
 
     // Preenche campos do modal
@@ -195,123 +203,10 @@
     btnLogout.addEventListener('click', async () => {
       try {
         await auth.signOut();
-        localStorage.removeItem('helpdesk_user');
         window.location.href = '/';
-      } catch (err) {
-        alert('Erro ao sair: ' + err.message);
+      } catch (e) {
+        console.error('Erro ao sair:', e);
       }
     });
   }
-
-  // ---------------------------------------------------------
-  // 5. FUNÇÕES DO MODAL DE PERFIL
-  // ---------------------------------------------------------
-  window.openProfileModal = function () {
-    const modal = document.getElementById('profileModal');
-    if (modal) modal.classList.add('active');
-  };
-
-  window.closeProfileModal = function () {
-    const modal = document.getElementById('profileModal');
-    if (modal) modal.classList.remove('active');
-  };
-
-  const modalOverlay = document.getElementById('profileModal');
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) window.closeProfileModal();
-    });
-  }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
-      window.closeProfileModal();
-    }
-  });
-
-  window.switchProfileTab = function (tab, btn) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const formDados = document.getElementById('formProfileData');
-    const formSeg = document.getElementById('formProfileSecurity');
-
-    if (tab === 'dados') {
-      if (formDados) formDados.style.display = 'block';
-      if (formSeg) formSeg.style.display = 'none';
-    } else {
-      if (formDados) formDados.style.display = 'none';
-      if (formSeg) formSeg.style.display = 'block';
-    }
-  };
-
-  window.handleUpdateProfile = async function (e) {
-    e.preventDefault();
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const novoNome = document.getElementById('profileName').value.trim();
-    const novoSetor = document.getElementById('profileSetor').value.trim();
-
-    try {
-      await user.updateProfile({ displayName: novoNome });
-      await db.collection('usuarios').doc(user.uid).update({
-        nome: novoNome,
-        setor: novoSetor
-      });
-
-      alert('Perfil atualizado com sucesso!');
-      renderHeaderUser({
-        nome: novoNome,
-        email: user.email,
-        perfil: document.getElementById('userBadge').textContent,
-        setor: novoSetor
-      });
-      window.closeProfileModal();
-    } catch (err) {
-      alert('Erro ao atualizar perfil: ' + err.message);
-    }
-  };
-
-  window.handleUpdatePassword = async function (e) {
-    e.preventDefault();
-    const user = auth.currentUser;
-    const pass = document.getElementById('newPassword').value;
-    const confirmPass = document.getElementById('confirmNewPassword').value;
-
-    if (!pass || pass.length < 6) {
-      alert('A senha deve conter no mínimo 6 caracteres.');
-      return;
-    }
-    if (pass !== confirmPass) {
-      alert('As senhas não conferem.');
-      return;
-    }
-
-    try {
-      await user.updatePassword(pass);
-      alert('Senha alterada com sucesso!');
-      document.getElementById('newPassword').value = '';
-      document.getElementById('confirmNewPassword').value = '';
-      window.closeProfileModal();
-    } catch (err) {
-      if (err.code === 'auth/requires-recent-login') {
-        alert('Por segurança, faça login novamente antes de alterar sua senha.');
-      } else {
-        alert('Erro ao alterar senha: ' + err.message);
-      }
-    }
-  };
-
-  window.handleSendResetEmail = async function () {
-    const user = auth.currentUser;
-    if (!user || !user.email) return;
-
-    try {
-      await auth.sendPasswordResetEmail(user.email);
-      alert('E-mail de redefinição de senha enviado para: ' + user.email);
-    } catch (err) {
-      alert('Erro: ' + err.message);
-    }
-  };
-
 })();

@@ -14,15 +14,13 @@ router.get('/', (req, res) => res.render('home', { title: 'HelpDesk TI' }));
 router.get('/dashboard', dashboard.index);
 
 // Chamados
-router.get('/tickets', tickets.index);
-router.get('/tickets/new', tickets.new);
-router.post('/tickets', tickets.create);
-router.get('/tickets/:id', tickets.show);
-router.get('/tickets/:id/edit', tickets.edit);
-router.put('/tickets/:id', tickets.update);
-router.patch('/tickets/:id/quick', tickets.quickUpdate);
-router.delete('/tickets/:id', tickets.destroy);
-router.post('/tickets/:id/comments', comments.create);
+router.get('/tickets', (req, res) => res.render('tickets/index', { title: 'Chamados' }));
+router.get('/tickets/new', (req, res) => res.render('tickets/form', { title: 'Novo Chamado' }));
+router.get('/tickets/novo', (req, res) => res.render('tickets/form', { title: 'Novo Chamado' }));
+router.get('/tickets/:id', (req, res) => res.render('tickets/show', { title: 'Detalhes do Chamado' }));
+
+// Gestão de Usuários (Apenas Admin)
+router.get('/usuarios', (req, res) => res.render('users/index', { title: 'Gestão de Usuários' }));
 
 // Técnicos
 router.get('/technicians', technicians.index);

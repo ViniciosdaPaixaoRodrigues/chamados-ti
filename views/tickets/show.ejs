@@ -1,129 +1,208 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Chamado — HelpDesk TI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Principal e Complementar -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard-profile.css">
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
 
-<header class="page-header">
-  <div>
-    <a href="/tickets" class="back-link"><%- icon('back', 16) %> Chamados</a>
-    <div class="title-line">
-      <span class="ticket-code lg"><%= ticket.protocolo %></span>
-      <span class="status status-<%= STATUS[ticket.status].cor %>"><%= STATUS[ticket.status].label %></span>
-      <span class="badge badge-<%= PRIORIDADES[ticket.prioridade].cor %>"><%= PRIORIDADES[ticket.prioridade].label %></span>
-    </div>
-    <h1><%= ticket.titulo %></h1>
-    <p class="subtitle">Aberto <%= timeAgo(ticket.createdAt) %> por <strong><%= ticket.solicitante %></strong></p>
-  </div>
-  <div class="header-actions">
-    <a href="/tickets/<%= ticket.id %>/edit" class="btn btn-secondary" id="ticket-edit"><%- icon('edit', 16) %> Editar</a>
-    <form method="POST" action="/tickets/<%= ticket.id %>?_method=DELETE" data-confirm="Excluir definitivamente o chamado <%= ticket.protocolo %>?">
-      <button type="submit" class="btn btn-danger" id="ticket-delete"><%- icon('trash', 16) %> Excluir</button>
-    </form>
-  </div>
-</header>
+  <div class="app">
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar">
+      <a href="/dashboard" class="brand" id="brand-link">
+        <span class="brand-logo">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </span>
+        <span class="brand-text">HelpDesk<strong>TI</strong></span>
+      </a>
 
-<div class="detail-layout">
-  <div class="detail-main">
-    <section class="card">
-      <h2 class="form-section"><%- icon('message') %> Descrição</h2>
-      <div class="description"><%= ticket.descricao %></div>
-    </section>
+      <nav class="nav" aria-label="Navegação principal">
+        <span class="nav-label">Geral</span>
+        <a href="/dashboard" id="nav-dashboard" class="nav-link">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/tickets" id="nav-tickets" class="nav-link active">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+          <span>Chamados</span>
+        </a>
 
-    <section class="card" id="comentarios">
-      <h2 class="form-section"><%- icon('clock') %> Histórico e comentários <span class="count"><%= ticket.comentarios.length %></span></h2>
+        <!-- Seção visível exclusivamente para Administradores -->
+        <div id="adminNavSection" style="display: none;">
+          <span class="nav-label">Administração</span>
+          <a href="/usuarios" id="nav-usuarios" class="nav-link">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Gestão de Usuários</span>
+          </a>
+        </div>
+      </nav>
 
-      <ol class="timeline">
-        <% ticket.comentarios.forEach(function (c) { %>
-          <% if (c.tipo === 'sistema') { %>
-            <li class="tl-item tl-system">
-              <span class="tl-dot"></span>
-              <p><%= c.mensagem %> <time class="muted" title="<%= formatDate(c.createdAt) %>"><%= timeAgo(c.createdAt) %></time></p>
-            </li>
-          <% } else { %>
-            <li class="tl-item tl-comment">
-              <span class="avatar avatar-sm"><%= c.autor.split(' ').map(function (p) { return p[0]; }).slice(0, 2).join('').toUpperCase() %></span>
-              <div class="bubble">
-                <div class="bubble-head"><strong><%= c.autor %></strong><time class="muted" title="<%= formatDate(c.createdAt) %>"><%= timeAgo(c.createdAt) %></time></div>
-                <p><%= c.mensagem %></p>
+      <a href="/tickets/novo" class="btn btn-primary btn-block sidebar-cta" id="sidebar-new-ticket">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Novo chamado
+      </a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <a href="/tickets" class="back-link">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Chamados
+          </a>
+          <div class="title-line">
+            <span class="ticket-code lg" id="ticketProtocolo">#CH-...</span>
+            <span class="status status-blue" id="ticketStatusBadge">Aberto</span>
+            <span class="badge badge-blue" id="ticketPriorityBadge">Normal</span>
+          </div>
+          <h1 id="ticketTitle">Carregando chamado...</h1>
+          <p class="subtitle" id="ticketSubtitle">Aguarde um momento...</p>
+        </div>
+
+        <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
+          <!-- Botão para Técnico/Admin assumir -->
+          <button type="button" id="btnAssumirChamado" onclick="handleAssumirChamado()" class="btn btn-primary btn-sm" style="display: none;">
+            🙋 Assumir este Chamado
+          </button>
+
+          <!-- Botão para Admin excluir -->
+          <button type="button" class="btn btn-danger btn-sm" id="btnDeleteTicket" onclick="handleDeleteTicket()" style="display: none;">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Excluir Chamado
+          </button>
+        </div>
+      </header>
+
+      <div class="detail-layout">
+        <!-- ÁREA PRINCIPAL -->
+        <div class="detail-main">
+          <!-- DESCRIÇÃO -->
+          <section class="card">
+            <h2 class="form-section">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Descrição do problema
+            </h2>
+            <div class="description" id="ticketDescription">Carregando descrição...</div>
+          </section>
+
+          <!-- COMENTÁRIOS E HISTÓRICO -->
+          <section class="card" id="comentarios">
+            <h2 class="form-section">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              Histórico & Comentários <span class="badge badge-purple" id="commentsCount" style="margin-left: 6px;">0</span>
+            </h2>
+
+            <ol class="timeline" id="commentsTimeline">
+              <li class="tl-item tl-system">
+                <span class="tl-dot"></span>
+                <p class="muted">Carregando histórico...</p>
+              </li>
+            </ol>
+
+            <form class="comment-form" onsubmit="handleAddComment(event)">
+              <input type="hidden" id="commentAutor" value="">
+              
+              <div class="field">
+                <label for="commentMensagem">Mensagem / Atualização</label>
+                <textarea id="commentMensagem" rows="3" placeholder="Escreva um comentário ou resposta..." required></textarea>
               </div>
-            </li>
-          <% } %>
-        <% }) %>
-      </ol>
 
-      <form method="POST" action="/tickets/<%= ticket.id %>/comments" class="comment-form" id="comment-form">
-        <div class="field">
-          <label for="autor">Seu nome</label>
-          <input type="text" id="autor" name="autor" placeholder="Ex.: Ana Souza" required list="autores">
-          <datalist id="autores">
-            <% tecnicos.forEach(function (t) { %><option value="<%= t.nome %>"><% }) %>
-            <option value="<%= ticket.solicitante %>">
-          </datalist>
+              <!-- Opção para Técnico/Admin marcar como Parecer Técnico -->
+              <div class="field" id="boxParecerTecnico" style="display: none; margin-bottom: 12px;">
+                <label class="switch">
+                  <input type="checkbox" id="chkIsParecer">
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span style="font-size: 13px;">Registrar como <strong>Parecer Técnico Oficial</strong></span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitComment">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                Enviar Mensagem
+              </button>
+            </form>
+          </section>
         </div>
-        <div class="field">
-          <label for="mensagem">Comentário</label>
-          <textarea id="mensagem" name="mensagem" rows="3" placeholder="Escreva uma atualização, solução aplicada ou dúvida…" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" id="comment-submit"><%- icon('message', 16) %> Comentar</button>
-      </form>
-    </section>
+
+        <!-- BARRA LATERAL (AÇÕES RÁPIDAS E INFORMAÇÕES) -->
+        <aside class="detail-side">
+          <!-- CARD AÇÕES RÁPIDAS (EXIBIDO APENAS PARA TÉCNICO E ADMIN) -->
+          <section class="card" id="cardAcoesRapidas">
+            <h2 class="form-section">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Ações Técnicas
+            </h2>
+            <form onsubmit="handleQuickUpdate(event)">
+              <div class="field">
+                <label for="q-status">Alterar Status</label>
+                <select id="q-status">
+                  <option value="aberto">Aberto</option>
+                  <option value="em_andamento">Em Atendimento</option>
+                  <option value="resolvido">Resolvido</option>
+                  <option value="fechado">Fechado</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="q-prioridade">Prioridade</label>
+                <select id="q-prioridade">
+                  <option value="baixa">Baixa</option>
+                  <option value="media">Média</option>
+                  <option value="alta">Alta</option>
+                  <option value="critica">Crítica</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-secondary btn-block">Salvar Alterações</button>
+            </form>
+          </section>
+
+          <section class="card">
+            <h2 class="form-section">Detalhes do chamado</h2>
+            <dl class="info-list">
+              <div>
+                <dt>Categoria</dt>
+                <dd id="infoCategoria">Geral</dd>
+              </div>
+              <div>
+                <dt>Solicitante</dt>
+                <dd id="infoSolicitante">—</dd>
+              </div>
+              <div>
+                <dt>Setor</dt>
+                <dd id="infoSetor">—</dd>
+              </div>
+              <div>
+                <dt>E-mail</dt>
+                <dd id="infoEmail" style="font-size: 12.5px;">—</dd>
+              </div>
+              <div>
+                <dt>Responsável</dt>
+                <dd id="infoTecnico" style="font-weight: 600; color: var(--primary);">Não atribuído</dd>
+              </div>
+            </dl>
+          </section>
+        </aside>
+      </div>
+    </main>
   </div>
 
-  <aside class="detail-side">
-    <section class="card">
-      <h2 class="form-section"><%- icon('zap') %> Ações rápidas</h2>
-      <form method="POST" action="/tickets/<%= ticket.id %>/quick?_method=PATCH" id="quick-form">
-        <div class="field">
-          <label for="q-status">Status</label>
-          <select id="q-status" name="status">
-            <% Object.keys(STATUS).forEach(function (s) { %>
-              <option value="<%= s %>" <%= ticket.status === s ? 'selected' : '' %>><%= STATUS[s].label %></option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="field">
-          <label for="q-prioridade">Prioridade</label>
-          <select id="q-prioridade" name="prioridade">
-            <% Object.keys(PRIORIDADES).forEach(function (p) { %>
-              <option value="<%= p %>" <%= ticket.prioridade === p ? 'selected' : '' %>><%= PRIORIDADES[p].label %></option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="field">
-          <label for="q-tecnico">Responsável</label>
-          <select id="q-tecnico" name="technicianId">
-            <option value="">Não atribuído</option>
-            <% tecnicos.forEach(function (t) { %>
-              <option value="<%= t.id %>" <%= ticket.technicianId === t.id ? 'selected' : '' %>><%= t.nome %></option>
-            <% }) %>
-            <% if (ticket.tecnico && !tecnicos.some(function (t) { return t.id === ticket.technicianId; })) { %>
-              <option value="<%= ticket.tecnico.id %>" selected><%= ticket.tecnico.nome %> (inativo)</option>
-            <% } %>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="quick-submit"><%- icon('check', 16) %> Atualizar</button>
-      </form>
-    </section>
+  <!-- FIREBASE SCRIPTS (COMPAT) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
-    <section class="card">
-      <h2 class="form-section"><%- icon('ticket') %> Informações</h2>
-      <dl class="info-list">
-        <div><dt>Categoria</dt><dd>
-          <% if (ticket.categoria) { %><span class="chip"><span class="dot" style="background: <%= ticket.categoria.cor %>"></span><%= ticket.categoria.nome %></span><% } else { %>—<% } %>
-        </dd></div>
-        <div><dt>Responsável</dt><dd>
-          <% if (ticket.tecnico) { %><span class="person"><span class="avatar avatar-sm"><%= ticket.tecnico.iniciais %></span><%= ticket.tecnico.nome %></span><% } else { %><span class="muted">Não atribuído</span><% } %>
-        </dd></div>
-        <div><dt><%- icon('user', 14) %> Solicitante</dt><dd><%= ticket.solicitante %></dd></div>
-        <% if (ticket.emailSolicitante) { %>
-          <div><dt><%- icon('mail', 14) %> E-mail</dt><dd><a href="mailto:<%= ticket.emailSolicitante %>"><%= ticket.emailSolicitante %></a></dd></div>
-        <% } %>
-        <div><dt><%- icon('building', 14) %> Setor</dt><dd><%= ticket.setor || '—' %></dd></div>
-        <div><dt>Aberto em</dt><dd><%= formatDate(ticket.createdAt) %></dd></div>
-        <div><dt>Última atualização</dt><dd><%= formatDate(ticket.updatedAt) %></dd></div>
-        <% if (ticket.resolvidoEm) { %>
-          <div><dt>Resolvido em</dt><dd><%= formatDate(ticket.resolvidoEm) %> <span class="muted">(<%= formatDuration((ticket.resolvidoEm - ticket.createdAt) / 36e5) %>)</span></dd></div>
-        <% } %>
-      </dl>
-    </section>
-  </aside>
-</div>
-
-<%- include('../partials/footer') %>
+  <!-- LÓGICA DE DETALHES DO CHAMADO -->
+  <script src="/js/ticket-details.js"></script>
+</body>
+</html>
