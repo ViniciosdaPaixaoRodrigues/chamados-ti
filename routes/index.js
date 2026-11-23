@@ -7,8 +7,11 @@ const categories = require('../controllers/categoryController');
 
 const router = express.Router();
 
+// Home
+router.get('/', (req, res) => res.render('home', { title: 'HelpDesk TI' }));
+
 // Dashboard
-router.get('/', dashboard.index);
+router.get('/dashboard', dashboard.index);
 
 // Chamados
 router.get('/tickets', tickets.index);

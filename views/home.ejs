@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpDesk TI — Sistema de Chamados</title>
+  <meta name="description" content="HelpDesk TI — sistema para abertura, acompanhamento e organização de chamados de suporte de TI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <header class="home-nav">
+    <div class="home-nav-inner">
+      <a href="/" class="brand">
+        <span class="brand-logo">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+          </svg>
+        </span>
+        <span class="brand-text">HelpDesk<strong>TI</strong></span>
+      </a>
+
+      <nav class="home-menu" aria-label="Navegação principal">
+        <a href="#features">Funcionalidades</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#numeros">Números</a>
+      </nav>
+
+      <div class="home-actions">
+        <button class="btn btn-ghost" onclick="openModal('login')" id="btn-entrar">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Entrar
+        </button>
+        <button class="btn btn-primary" onclick="openModal('cadastro')" id="btn-cadastrar">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/><path d="M12 5v14"/>
+          </svg>
+          Criar conta
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <main class="home-main">
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <p class="eyebrow">Sistema de Chamados de TI</p>
+      <h1 class="hero-title">
+        Suporte de TI<br>
+        <span class="gradient-text">organizado e eficiente</span>
+      </h1>
+      <p class="hero-subtitle">
+        Abra, acompanhe e resolva chamados de suporte em um painel moderno.
+        Priorize tarefas, distribua a carga da equipe e mantenha tudo sob controle.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary btn-lg" onclick="openModal('cadastro')">
+          Comece gratuitamente
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+        <button class="btn btn-secondary btn-lg" onclick="openModal('login')">
+          Já tenho conta
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== FEATURES ========== -->
+    <section class="section" id="features">
+      <div class="section-header">
+        <p class="eyebrow">Funcionalidades</p>
+        <h2>Tudo que sua equipe precisa</h2>
+        <p class="subtitle">Gerencie chamados com um sistema pensado para agilizar o suporte de TI.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--indigo);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+            </svg>
+          </div>
+          <h3>Dashboard em tempo real</h3>
+          <p>Visão geral com indicadores de chamados abertos, em andamento, sem responsável e resolvidos.</p>
+        </div>
+
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--amber);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+            </svg>
+          </div>
+          <h3>Priorização inteligente</h3>
+          <p>Classifique chamados por prioridade — baixa, média, alta ou crítica — e veja os mais urgentes primeiro.</p>
+        </div>
+
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--green);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Gestão de equipe</h3>
+          <p>Atribua técnicos, acompanhe a carga individual e veja quem está disponível para novos chamados.</p>
+        </div>
+
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--purple);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Categorias personalizadas</h3>
+          <p>Organize chamados em categorias como Hardware, Software, Rede e mais — cada uma com cor e ícone.</p>
+        </div>
+
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--blue);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+            </svg>
+          </div>
+          <h3>Comentários e histórico</h3>
+          <p>Adicione comentários em cada chamado e acompanhe todo o histórico de atualizações em uma timeline.</p>
+        </div>
+
+        <div class="feature-card card">
+          <div class="feature-icon stat-icon" style="--c: var(--red);">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Métricas e relatórios</h3>
+          <p>Veja tempo médio de resolução, distribuição por status, categorias mais demandadas e muito mais.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== COMO FUNCIONA ========== -->
+    <section class="section" id="como-funciona">
+      <div class="section-header">
+        <p class="eyebrow">Como funciona</p>
+        <h2>Simples em 3 passos</h2>
+        <p class="subtitle">Do problema à solução em poucos cliques.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step card">
+          <div class="step-number">1</div>
+          <h3>Abra um chamado</h3>
+          <p>O solicitante descreve o problema, seleciona a categoria e a prioridade. O sistema gera um protocolo único.</p>
+        </div>
+        <div class="step-arrow" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="step card">
+          <div class="step-number">2</div>
+          <h3>Equipe atende</h3>
+          <p>Um técnico assume o chamado, adiciona comentários e atualiza o status conforme o progresso.</p>
+        </div>
+        <div class="step-arrow" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </div>
+        <div class="step card">
+          <div class="step-number">3</div>
+          <h3>Problema resolvido</h3>
+          <p>O chamado é fechado, o tempo é registrado e as métricas do painel são atualizadas automaticamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== NÚMEROS ========== -->
+    <section class="section" id="numeros">
+      <div class="section-header">
+        <p class="eyebrow">Em números</p>
+        <h2>Feito para escalar com sua equipe</h2>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card stat-indigo">
+          <span class="stat-icon">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+            </svg>
+          </span>
+          <span class="stat-label">Chamados gerenciados</span>
+          <span class="stat-value" data-count="5000">5.000+</span>
+          <span class="stat-foot">e contando</span>
+        </div>
+        <div class="stat-card stat-green">
+          <span class="stat-icon">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+            </svg>
+          </span>
+          <span class="stat-label">Taxa de resolução</span>
+          <span class="stat-value">98%</span>
+          <span class="stat-foot">nos últimos 30 dias</span>
+        </div>
+        <div class="stat-card stat-amber">
+          <span class="stat-icon">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
+          <span class="stat-label">Tempo médio</span>
+          <span class="stat-value">2,4h</span>
+          <span class="stat-foot">até a resolução</span>
+        </div>
+        <div class="stat-card stat-red">
+          <span class="stat-icon">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </span>
+          <span class="stat-label">Equipes ativas</span>
+          <span class="stat-value">50+</span>
+          <span class="stat-foot">usando o sistema</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CTA FINAL ========== -->
+    <section class="section cta-section">
+      <div class="cta-card card">
+        <div class="cta-glow" aria-hidden="true"></div>
+        <h2>Pronto para organizar seu suporte?</h2>
+        <p class="subtitle">Crie sua conta em segundos e acesse o painel agora mesmo.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary btn-lg" onclick="openModal('cadastro')">
+            Criar conta gratuita
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+          <button class="btn btn-secondary btn-lg" onclick="openModal('login')">
+            Fazer login
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="home-footer">
+      <div class="home-footer-inner">
+        <div class="brand">
+          <span class="brand-logo">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+            </svg>
+          </span>
+          <span class="brand-text">HelpDesk<strong>TI</strong></span>
+        </div>
+        <p class="muted">&copy; 2026 HelpDesk TI. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ========== MODAL OVERLAY ========== -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+
+    <!-- ===== MODAL LOGIN ===== -->
+    <div class="modal card" id="modalLogin" role="dialog" aria-labelledby="login-title" aria-modal="true">
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+
+      <div class="modal-header">
+        <div class="modal-logo">
+          <span class="brand-logo">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+            </svg>
+          </span>
+        </div>
+        <h2 id="login-title">Entrar no HelpDesk<strong>TI</strong></h2>
+        <p class="muted">Acesse sua conta para gerenciar chamados</p>
+      </div>
+
+      <!-- Alert de erro -->
+      <div class="alert alert-error" id="loginError" style="display:none;" role="alert">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+        </svg>
+        <span id="loginErrorMsg"></span>
+      </div>
+
+      <form id="formLogin" onsubmit="handleLogin(event)" novalidate>
+        <fieldset class="field">
+          <label for="login-email">E-mail <span class="req">*</span></label>
+          <input type="email" id="login-email" name="email" placeholder="seu@email.com" required autocomplete="email">
+        </fieldset>
+
+        <fieldset class="field">
+          <label for="login-senha">Senha <span class="req">*</span></label>
+          <div class="password-field">
+            <input type="password" id="login-senha" name="senha" placeholder="••••••••" required autocomplete="current-password" minlength="6">
+            <button type="button" class="password-toggle" onclick="togglePassword('login-senha', this)" aria-label="Mostrar senha">
+              <svg class="icon icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+            </button>
+          </div>
+        </fieldset>
+
+        <div class="field-row" style="margin-bottom: 18px; align-items: center;">
+          <label class="switch" style="margin-bottom: 0;">
+            <input type="checkbox" id="login-lembrar" name="lembrar">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            Lembrar-me
+          </label>
+          <a href="#" class="link-muted" style="text-align: right;" onclick="handleForgotPassword(event)">Esqueceu a senha?</a>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block" id="btnLogin">
+            <span class="btn-text">Entrar no sistema</span>
+            <span class="btn-loading" style="display:none;">
+              <span class="spinner"></span> Acessando Dashboard...
+            </span>
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>ou continue com</span>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-block btn-social" onclick="handleGoogleLogin()">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          Entrar com Google
+        </button>
+      </form>
+
+      <p class="modal-footer-text">
+        Não tem conta? <a href="#" onclick="switchModal(event, 'cadastro')">Criar conta</a>
+      </p>
+    </div>
+
+    <!-- ===== MODAL CADASTRO ===== -->
+    <div class="modal card" id="modalCadastro" role="dialog" aria-labelledby="cadastro-title" aria-modal="true" style="display: none;">
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+
+      <div class="modal-header">
+        <div class="modal-logo">
+          <span class="brand-logo">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+            </svg>
+          </span>
+        </div>
+        <h2 id="cadastro-title">Criar conta no HelpDesk<strong>TI</strong></h2>
+        <p class="muted">Preencha seus dados para começar</p>
+      </div>
+
+      <!-- Alert de erro -->
+      <div class="alert alert-error" id="cadastroError" style="display:none;" role="alert">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+        </svg>
+        <span id="cadastroErrorMsg"></span>
+      </div>
+
+      <form id="formCadastro" onsubmit="handleCadastro(event)" novalidate>
+        <fieldset class="field">
+          <label for="cad-nome">Nome completo <span class="req">*</span></label>
+          <input type="text" id="cad-nome" name="nome" placeholder="Seu nome" required autocomplete="name">
+        </fieldset>
+
+        <fieldset class="field">
+          <label for="cad-email">E-mail <span class="req">*</span></label>
+          <input type="email" id="cad-email" name="email" placeholder="seu@email.com" required autocomplete="email">
+        </fieldset>
+
+        <fieldset class="field">
+          <label for="cad-setor">Setor</label>
+          <select id="cad-setor" name="setor">
+            <option value="">Selecione um setor</option>
+            <option value="Administrativo">Administrativo</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Diretoria">Diretoria</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operações">Operações</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="TI">TI</option>
+          </select>
+        </fieldset>
+
+        <fieldset class="field">
+          <label for="cad-senha">Senha <span class="req">*</span></label>
+          <div class="password-field">
+            <input type="password" id="cad-senha" name="senha" placeholder="Mínimo 6 caracteres" required autocomplete="new-password" minlength="6">
+            <button type="button" class="password-toggle" onclick="togglePassword('cad-senha', this)" aria-label="Mostrar senha">
+              <svg class="icon icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+            </button>
+          </div>
+          <div class="password-strength" id="passwordStrength">
+            <div class="strength-bar"><span class="strength-fill" id="strengthFill"></span></div>
+            <span class="strength-text muted" id="strengthText"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <label for="cad-confirma">Confirmar senha <span class="req">*</span></label>
+          <div class="password-field">
+            <input type="password" id="cad-confirma" name="confirma" placeholder="Repita a senha" required autocomplete="new-password" minlength="6">
+            <button type="button" class="password-toggle" onclick="togglePassword('cad-confirma', this)" aria-label="Mostrar senha">
+              <svg class="icon icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+            </button>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block" id="btnCadastro">
+            <span class="btn-text">Criar conta e acessar</span>
+            <span class="btn-loading" style="display:none;">
+              <span class="spinner"></span> Criando conta...
+            </span>
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>ou continue com</span>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-block btn-social" onclick="handleGoogleLogin()">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          Cadastrar com Google
+        </button>
+      </form>
+
+      <p class="modal-footer-text">
+        Já tem conta? <a href="#" onclick="switchModal(event, 'login')">Fazer login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Toast de feedback -->
+  <div class="toast toast-success" id="toastSucesso" style="display:none;" role="status" data-toast>
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+    </svg>
+    <span id="toastMsg"></span>
+    <button type="button" class="toast-close" aria-label="Fechar" onclick="hideToast()">
+      <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+
+  <script src="/js/app.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <!-- Script de Autenticação e Redirecionamento -->
+  <script>
+  (function () {
+    'use strict';
+
+    // Rota de destino após autenticação
+    var DASHBOARD_URL = '/dashboard';
+
+    // ---------------------------------------------------------
+    //  INICIALIZAÇÃO FIREBASE & FIRESTORE
+    // ---------------------------------------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyBe1rlrucH_b34RBut3o5F-SrphZeI-etQ",
+      authDomain: "chamados-ti-2ab4f.firebaseapp.com",
+      projectId: "chamados-ti-2ab4f",
+      storageBucket: "chamados-ti-2ab4f.firebasestorage.app",
+      messagingSenderId: "726113088268",
+      appId: "1:726113088268:web:c77f9d1b857e4e1fbe4f29"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    var auth = firebase.auth();
+    var googleProvider = new firebase.auth.GoogleAuthProvider();
+    var db = firebase.firestore();
+
+    // ---------------------------------------------------------
+    //  REDIRECIONAMENTO PARA O DASHBOARD
+    // ---------------------------------------------------------
+    function redirectToDashboard(msg) {
+      window.showToast((msg || 'Login realizado!') + ' Entrando no painel...');
+      setTimeout(function () {
+        var targetUrl = DASHBOARD_URL + '?msg=' + encodeURIComponent(msg || 'Bem-vindo ao HelpDesk TI!');
+        window.location.href = targetUrl;
+      }, 700);
+    }
+
+    // ---------------------------------------------------------
+    //  CONTROLE DE MODAIS
+    // ---------------------------------------------------------
+    var overlay = document.getElementById('modalOverlay');
+    var modalLogin = document.getElementById('modalLogin');
+    var modalCadastro = document.getElementById('modalCadastro');
+
+    window.openModal = function (tipo) {
+      if (!overlay) return;
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      if (tipo === 'login') {
+        modalLogin.style.display = '';
+        modalCadastro.style.display = 'none';
+        var emailInput = document.getElementById('login-email');
+        if (emailInput) setTimeout(function () { emailInput.focus(); }, 100);
+      } else {
+        modalLogin.style.display = 'none';
+        modalCadastro.style.display = '';
+        var nomeInput = document.getElementById('cad-nome');
+        if (nomeInput) setTimeout(function () { nomeInput.focus(); }, 100);
+      }
+
+      hideError('loginError');
+      hideError('cadastroError');
+    };
+
+    window.closeModal = function () {
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    window.switchModal = function (e, tipo) {
+      e.preventDefault();
+      window.openModal(tipo);
+    };
+
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) window.closeModal();
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay && overlay.classList.contains('active')) {
+        window.closeModal();
+      }
+    });
+
+    function checkHash() {
+      var hash = window.location.hash.replace('#', '');
+      if (hash === 'login' || hash === 'cadastro') {
+        window.openModal(hash);
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
+    checkHash();
+
+    // ---------------------------------------------------------
+    //  TOGGLE VISIBILIDADE DE SENHA
+    // ---------------------------------------------------------
+    window.togglePassword = function (inputId, btn) {
+      var input = document.getElementById(inputId);
+      if (!input) return;
+      var isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+
+      var iconEye = btn.querySelector('.icon-eye');
+      var iconEyeOff = btn.querySelector('.icon-eye-off');
+      if (iconEye && iconEyeOff) {
+        iconEye.style.display = isPassword ? 'none' : '';
+        iconEyeOff.style.display = isPassword ? '' : 'none';
+      }
+    };
+
+    // ---------------------------------------------------------
+    //  FORÇA DE SENHA
+    // ---------------------------------------------------------
+    var senhaInput = document.getElementById('cad-senha');
+    var strengthFill = document.getElementById('strengthFill');
+    var strengthText = document.getElementById('strengthText');
+
+    if (senhaInput) {
+      senhaInput.addEventListener('input', function () {
+        var val = senhaInput.value;
+        var score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score++;
+        if (/\d/.test(val)) score++;
+        if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+        var levels = [
+          { width: '0%', color: 'transparent', label: '' },
+          { width: '20%', color: 'var(--red)', label: 'Muito fraca' },
+          { width: '40%', color: 'var(--amber)', label: 'Fraca' },
+          { width: '60%', color: 'var(--amber)', label: 'Razoável' },
+          { width: '80%', color: 'var(--blue)', label: 'Boa' },
+          { width: '100%', color: 'var(--green)', label: 'Forte' },
+        ];
+
+        var level = val.length === 0 ? levels[0] : levels[Math.min(score, 5)];
+        if (strengthFill) {
+          strengthFill.style.width = level.width;
+          strengthFill.style.background = level.color;
+        }
+        if (strengthText) {
+          strengthText.textContent = level.label;
+          strengthText.style.color = level.color;
+        }
+      });
+    }
+
+    // ---------------------------------------------------------
+    //  HELPERS & MENSAGENS
+    // ---------------------------------------------------------
+    function showError(containerId, message) {
+      var el = document.getElementById(containerId);
+      var msgEl = document.getElementById(containerId.replace('Error', 'ErrorMsg'));
+      if (el && msgEl) {
+        msgEl.textContent = message;
+        el.style.display = '';
+      }
+    }
+
+    function hideError(containerId) {
+      var el = document.getElementById(containerId);
+      if (el) el.style.display = 'none';
+    }
+
+    function setLoading(btnId, loading) {
+      var btn = document.getElementById(btnId);
+      if (!btn) return;
+      var text = btn.querySelector('.btn-text');
+      var loader = btn.querySelector('.btn-loading');
+      if (text) text.style.display = loading ? 'none' : '';
+      if (loader) loader.style.display = loading ? '' : 'none';
+      btn.disabled = loading;
+    }
+
+    window.showToast = function (message) {
+      var toast = document.getElementById('toastSucesso');
+      var msg = document.getElementById('toastMsg');
+      if (toast && msg) {
+        msg.textContent = message;
+        toast.style.display = '';
+        toast.classList.remove('hide');
+        setTimeout(function () {
+          window.hideToast();
+        }, 4000);
+      }
+    };
+
+    window.hideToast = function () {
+      var toast = document.getElementById('toastSucesso');
+      if (toast) {
+        toast.classList.add('hide');
+        setTimeout(function () {
+          toast.style.display = 'none';
+          toast.classList.remove('hide');
+        }, 300);
+      }
+    };
+
+    function firebaseErrorMessage(code) {
+      var messages = {
+        'auth/email-already-in-use': 'Este e-mail já está cadastrado.',
+        'auth/invalid-email': 'E-mail inválido.',
+        'auth/operation-not-allowed': 'Método de autenticação não habilitado.',
+        'auth/weak-password': 'A senha deve ter pelo menos 6 caracteres.',
+        'auth/user-disabled': 'Esta conta foi desativada.',
+        'auth/user-not-found': 'E-mail ou senha incorretos.',
+        'auth/wrong-password': 'E-mail ou senha incorretos.',
+        'auth/invalid-credential': 'E-mail ou senha incorretos.',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde um momento e tente novamente.',
+        'auth/popup-closed-by-user': 'Login cancelado.',
+        'auth/network-request-failed': 'Erro de conexão. Verifique sua internet.',
+      };
+      return messages[code] || 'Ocorreu um erro. Tente novamente.';
+    }
+
+    // ---------------------------------------------------------
+    //  HANDLER: LOGIN COM EMAIL/SENHA
+    // ---------------------------------------------------------
+    window.handleLogin = function (e) {
+      e.preventDefault();
+      hideError('loginError');
+
+      var email = document.getElementById('login-email').value.trim();
+      var senha = document.getElementById('login-senha').value;
+
+      if (!email || !senha) {
+        showError('loginError', 'Preencha todos os campos.');
+        return;
+      }
+
+      setLoading('btnLogin', true);
+
+      if (auth) {
+        auth.signInWithEmailAndPassword(email, senha)
+          .then(function (userCredential) {
+            var user = userCredential.user;
+            // Busca o perfil do usuário no Firestore para salvar localmente
+            return db.collection('usuarios').doc(user.uid).get().then(function (doc) {
+              var dados = doc.exists ? doc.data() : { perfil: 'user' };
+              localStorage.setItem('helpdesk_user', JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                name: user.displayName || email.split('@')[0],
+                perfil: dados.perfil || 'user',
+                setor: dados.setor || ''
+              }));
+            });
+          })
+          .then(function () {
+            redirectToDashboard('Login realizado com sucesso!');
+          })
+          .catch(function (error) {
+            showError('loginError', firebaseErrorMessage(error.code) || error.message);
+            setLoading('btnLogin', false);
+          });
+        return;
+      }
+    };
+
+    // ---------------------------------------------------------
+    //  HANDLER: CADASTRO COM EMAIL/SENHA (CORRIGIDO PARA O FIRESTORE)
+    // ---------------------------------------------------------
+    window.handleCadastro = function (e) {
+      e.preventDefault();
+      hideError('cadastroError');
+
+      var nome = document.getElementById('cad-nome').value.trim();
+      var email = document.getElementById('cad-email').value.trim();
+      var setor = document.getElementById('cad-setor').value;
+      var senha = document.getElementById('cad-senha').value;
+      var confirma = document.getElementById('cad-confirma').value;
+
+      if (!nome || !email || !senha || !confirma) {
+        showError('cadastroError', 'Preencha todos os campos obrigatórios.');
+        return;
+      }
+      if (senha.length < 6) {
+        showError('cadastroError', 'A senha deve ter pelo menos 6 caracteres.');
+        return;
+      }
+      if (senha !== confirma) {
+        showError('cadastroError', 'As senhas não coincidem.');
+        return;
+      }
+
+      setLoading('btnCadastro', true);
+
+      if (auth) {
+        var novoUsuario = null;
+
+        auth.createUserWithEmailAndPassword(email, senha)
+          .then(function (userCredential) {
+            novoUsuario = userCredential.user;
+
+            // 1. Atualiza nome no Authentication
+            var pUpdateProfile = novoUsuario.updateProfile({ displayName: nome });
+
+            // 2. Grava o documento na coleção "usuarios"
+            var pFirestore = db.collection('usuarios').doc(novoUsuario.uid).set({
+              uid: novoUsuario.uid,
+              nome: nome,
+              email: email,
+              setor: setor || 'Geral',
+              perfil: 'user', // 👈 Padrão para todo novo usuário
+              criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Aguarda os dois terminarem
+            return Promise.all([pUpdateProfile, pFirestore]);
+          })
+          .then(function () {
+            console.log('✅ Usuário salvo na coleção "usuarios":', novoUsuario.uid);
+
+            localStorage.setItem('helpdesk_user', JSON.stringify({
+              uid: novoUsuario.uid,
+              name: nome,
+              email: email,
+              setor: setor || 'Geral',
+              perfil: 'user'
+            }));
+
+            // Só redireciona depois que o Firestore confirmou a gravação!
+            redirectToDashboard('Conta criada com sucesso!');
+          })
+          .catch(function (error) {
+            console.error('❌ Erro no cadastro/Firestore:', error);
+            showError('cadastroError', firebaseErrorMessage(error.code) || error.message);
+            setLoading('btnCadastro', false);
+          });
+        return;
+      }
+    };
+
+    // ---------------------------------------------------------
+    //  HANDLER: LOGIN COM GOOGLE (COM GRAVAÇÃO NO FIRESTORE)
+    // ---------------------------------------------------------
+    window.handleGoogleLogin = function () {
+      if (auth && googleProvider) {
+        auth.signInWithPopup(googleProvider)
+          .then(function (result) {
+            var user = result.user;
+            var docRef = db.collection('usuarios').doc(user.uid);
+
+            return docRef.get().then(function (doc) {
+              if (!doc.exists) {
+                // Se é o primeiro login com Google, cria com perfil: 'user'
+                return docRef.set({
+                  uid: user.uid,
+                  nome: user.displayName || 'Usuário Google',
+                  email: user.email,
+                  setor: 'Geral',
+                  perfil: 'user',
+                  criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                });
+              }
+            }).then(function () {
+              return docRef.get();
+            }).then(function (doc) {
+              var dados = doc.data() || {};
+              localStorage.setItem('helpdesk_user', JSON.stringify({
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                perfil: dados.perfil || 'user'
+              }));
+            });
+          })
+          .then(function () {
+            redirectToDashboard('Login com Google realizado!');
+          })
+          .catch(function (error) {
+            if (error.code === 'auth/popup-closed-by-user') return;
+            var currentModal = modalLogin.style.display !== 'none' ? 'loginError' : 'cadastroError';
+            showError(currentModal, firebaseErrorMessage(error.code) || error.message);
+          });
+        return;
+      }
+    };
+
+    // ---------------------------------------------------------
+    //  HANDLER: RECUPERAR SENHA
+    // ---------------------------------------------------------
+    window.handleForgotPassword = function (e) {
+      e.preventDefault();
+      var email = document.getElementById('login-email').value.trim();
+
+      if (!email) {
+        showError('loginError', 'Preencha o campo de e-mail para recuperar a senha.');
+        return;
+      }
+
+      if (auth) {
+        auth.sendPasswordResetEmail(email)
+          .then(function () {
+            hideError('loginError');
+            window.showToast('E-mail de redefinição enviado para ' + email);
+          })
+          .catch(function (error) {
+            showError('loginError', firebaseErrorMessage(error.code));
+          });
+        return;
+      }
+    };
+
+  })();
+  </script>
+</body>
+</html>
