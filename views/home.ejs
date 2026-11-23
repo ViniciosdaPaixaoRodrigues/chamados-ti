@@ -506,6 +506,18 @@
     var db = firebase.firestore();
 
     // ---------------------------------------------------------
+    //  CONSISTÊNCIA DE SESSÃO: REDIRECIONA SE JÁ LOGADO
+    // ---------------------------------------------------------
+    var isSubmitting = false; // Flag para não conflitar durante novo cadastro
+
+    auth.onAuthStateChanged(function (user) {
+      if (user && !isSubmitting) {
+        // Usuário já possui sessão ativa no navegador -> vai direto pro dashboard
+        window.location.href = DASHBOARD_URL;
+      }
+    });
+
+    // ---------------------------------------------------------
     //  REDIRECIONAMENTO PARA O DASHBOARD
     // ---------------------------------------------------------
     function redirectToDashboard(msg) {
@@ -708,6 +720,8 @@
       e.preventDefault();
       hideError('loginError');
 
+      isSubmitting = true;
+
       var email = document.getElementById('login-email').value.trim();
       var senha = document.getElementById('login-senha').value;
 
@@ -751,6 +765,8 @@
     window.handleCadastro = function (e) {
       e.preventDefault();
       hideError('cadastroError');
+
+      isSubmitting = true;
 
       var nome = document.getElementById('cad-nome').value.trim();
       var email = document.getElementById('cad-email').value.trim();

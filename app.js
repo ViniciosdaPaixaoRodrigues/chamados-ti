@@ -36,8 +36,6 @@ app.use((err, req, res, next) => {
 
 (async () => {
   try {
-    await sequelize.sync();
-    await seed({ onlyIfEmpty: true });
     app.listen(PORT, () => {
       console.log(`\n  HelpDesk TI rodando em http://localhost:${PORT}\n`);
     });

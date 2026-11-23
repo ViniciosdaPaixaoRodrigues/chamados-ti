@@ -96,4 +96,110 @@
   </aside>
 </form>
 
+<!-- SDKs do Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+  // 1. Inicializa o Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBe1rlrucH_b34RBut3o5F-SrphZeI-etQ",
+    authDomain: "chamados-ti-2ab4f.firebaseapp.com",
+    projectId: "chamados-ti-2ab4f",
+    storageBucket: "chamados-ti-2ab4f.firebasestorage.app",
+    messagingSenderId: "726113088268",
+    appId: "1:726113088268:web:c77f9d1b857e4e1fbe4f29"
+  };
+
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // 2. Preenche automaticamente os dados do solicitante quando o Auth carregar
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.href = '/';
+      return;
+    }
+
+    // Busca dados complementares do solicitante no Firestore
+    const userDoc = await db.collection('usuarios').doc(user.uid).get();
+    const dados = userDoc.exists ? userDoc.data() : {};
+
+    // Auto-preenche os campos do formulário
+    const inputNome = document.getElementById('solicitante');
+    const inputEmail = document.getElementById('emailSolicitante');
+    const inputSetor = document.getElementById('setor');
+
+    if (inputNome && !inputNome.value) inputNome.value = dados.nome || user.displayName || '';
+    if (inputEmail && !inputEmail.value) {
+      inputEmail.value = user.email || '';
+      inputEmail.readOnly = true; // Impede alterar o email do solicitante
+    }
+    if (inputSetor && dados.setor) inputSetor.value = dados.setor;
+  });
+
+  // 3. Intercepta o envio do formulário (#ticket-form) para salvar no Firestore
+  const form = document.getElementById('ticket-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Impede o envio via POST do Sequelize antigo
+
+      const user = auth.currentUser;
+      if (!user) {
+        alert('Você precisa estar logado para abrir um chamado.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('ticket-submit');
+      if (submitBtn) submitBtn.disabled = true;
+
+      // Gera protocolo amigável (ex: #CH-26849)
+      const ano = new Date().getFullYear().toString().slice(-2);
+      const random = Math.floor(1000 + Math.random() * 9000);
+      const protocolo = `CH-${ano}${random}`;
+
+      const titulo = document.getElementById('titulo').value.trim();
+      const descricao = document.getElementById('descricao').value.trim();
+      const prioridade = document.querySelector('input[name="prioridade"]:checked')?.value || 'media';
+      const solicitante = document.getElementById('solicitante').value.trim();
+      const emailSolicitante = document.getElementById('emailSolicitante').value.trim();
+      const setor = document.getElementById('setor').value;
+      const categoriaSelect = document.getElementById('categoryId');
+      const categoriaNome = categoriaSelect ? categoriaSelect.options[categoriaSelect.selectedIndex]?.text : 'Geral';
+
+      try {
+        // Grava no Firestore vinculando ao user.uid
+        await db.collection('chamados').add({
+          protocolo: protocolo,
+          titulo: titulo,
+          descricao: descricao,
+          prioridade: prioridade,
+          status: 'aberto',
+          categoria: categoriaNome,
+          
+          // UUID do usuário que criou o chamado:
+          criadoPorId: user.uid,
+          solicitante: solicitante,
+          emailSolicitante: emailSolicitante,
+          setor: setor || 'Geral',
+
+          tecnicoId: null,
+          tecnicoNome: null,
+          criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert(`Chamado ${protocolo} aberto com sucesso!`);
+        window.location.href = '/dashboard';
+
+      } catch (err) {
+        console.error('Erro ao salvar no Firestore:', err);
+        alert('Erro ao criar chamado: ' + err.message);
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+</script>
+
 <%- include('../partials/footer') %>
