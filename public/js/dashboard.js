@@ -99,11 +99,9 @@
       modalBadge.textContent = perfil;
     }
 
-    // **EXIBE** menu de Gestão de Usuários na sidebar para admin
+    // Exibe menu de Gestão de Usuários na sidebar para admin
     const adminNav = document.getElementById('adminNavSection');
-    if (adminNav) {
-      adminNav.style.display = (perfil === 'admin') ? 'block' : 'none';
-    }
+    if (adminNav) adminNav.style.display = (perfil === 'admin') ? 'block' : 'none';
 
     // Preenche campos do modal
     const inEmail = document.getElementById('profileEmail');
