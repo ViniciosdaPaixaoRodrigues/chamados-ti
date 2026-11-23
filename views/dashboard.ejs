@@ -1,144 +1,254 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' && title ? title : 'Painel de Chamados' %> · HelpDesk TI</title>
+  <meta name="description" content="HelpDesk TI — painel de controle e acompanhamento de chamados.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- 1. CSS Principal do Projeto (Reutilizado) -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- 2. CSS Complementar (Apenas correções responsivas & componentes de perfil) -->
+  <link rel="stylesheet" href="/css/dashboard-profile.css">
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
 
-<header class="page-header">
-  <div>
-    <p class="eyebrow"><%= formatDate(new Date(), false) %></p>
-    <h1>Painel de chamados</h1>
-    <p class="subtitle">Visão geral da fila de suporte e da carga da equipe.</p>
-  </div>
-  <a href="/tickets/new" class="btn btn-primary" id="dash-new-ticket"><%- icon('plus') %> Abrir chamado</a>
-</header>
+  <div class="app">
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar">
+      <a href="/dashboard" class="brand">
+        <span class="brand-logo">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+          </svg>
+        </span>
+        <span class="brand-text">HelpDesk<strong>TI</strong></span>
+      </a>
 
-<section class="stats" aria-label="Indicadores">
-  <a href="/tickets?status=ativos" class="stat-card stat-indigo" id="stat-ativos">
-    <span class="stat-icon"><%- icon('inbox', 22) %></span>
-    <span class="stat-label">Em aberto</span>
-    <span class="stat-value" data-count="<%= ativos %>"><%= ativos %></span>
-    <span class="stat-foot"><%= total %> chamados no total</span>
-  </a>
-  <a href="/tickets?status=em_andamento" class="stat-card stat-amber" id="stat-andamento">
-    <span class="stat-icon"><%- icon('activity', 22) %></span>
-    <span class="stat-label">Em andamento</span>
-    <span class="stat-value" data-count="<%= porStatus.em_andamento %>"><%= porStatus.em_andamento %></span>
-    <span class="stat-foot"><%= porStatus.aberto %> aguardando atendimento</span>
-  </a>
-  <a href="/tickets?tecnico=nenhum&status=ativos" class="stat-card stat-red" id="stat-sem-tecnico">
-    <span class="stat-icon"><%- icon('alert', 22) %></span>
-    <span class="stat-label">Sem responsável</span>
-    <span class="stat-value" data-count="<%= semTecnico %>"><%= semTecnico %></span>
-    <span class="stat-foot">precisam ser atribuídos</span>
-  </a>
-  <a href="/tickets?status=resolvido" class="stat-card stat-green" id="stat-resolvidos">
-    <span class="stat-icon"><%- icon('check', 22) %></span>
-    <span class="stat-label">Resolvidos</span>
-    <span class="stat-value" data-count="<%= porStatus.resolvido + porStatus.fechado %>"><%= porStatus.resolvido + porStatus.fechado %></span>
-    <span class="stat-foot">tempo médio: <%= formatDuration(tempoMedio) %></span>
-  </a>
-</section>
-
-<div class="grid-dash">
-  <section class="card" aria-labelledby="h-prioritarios">
-    <div class="card-head">
-      <h2 id="h-prioritarios"><%- icon('zap') %> Fila prioritária</h2>
-      <a href="/tickets?status=ativos" class="link-muted">Ver todos</a>
-    </div>
-    <% if (!prioritarios.length) { %>
-      <div class="empty small"><%- icon('check', 28) %><p>Nenhum chamado crítico ou de alta prioridade em aberto. 🎉</p></div>
-    <% } else { %>
-      <ul class="ticket-list">
-        <% prioritarios.forEach(function (t) { %>
-          <li>
-            <a href="/tickets/<%= t.id %>" class="ticket-row prio-<%= t.prioridade %>">
-              <span class="prio-bar"></span>
-              <div class="ticket-row-main">
-                <span class="ticket-code"><%= t.protocolo %></span>
-                <strong><%= t.titulo %></strong>
-                <span class="muted"><%= t.solicitante %><%= t.setor ? ' · ' + t.setor : '' %> · <%= timeAgo(t.createdAt) %></span>
-              </div>
-              <div class="ticket-row-side">
-                <span class="badge badge-<%= PRIORIDADES[t.prioridade].cor %>"><%= PRIORIDADES[t.prioridade].label %></span>
-                <% if (t.tecnico) { %>
-                  <span class="avatar avatar-sm" title="<%= t.tecnico.nome %>"><%= t.tecnico.iniciais %></span>
-                <% } else { %>
-                  <span class="avatar avatar-sm avatar-empty" title="Sem responsável">?</span>
-                <% } %>
-              </div>
-            </a>
-          </li>
-        <% }) %>
-      </ul>
-    <% } %>
-  </section>
-
-  <section class="card" aria-labelledby="h-prioridade">
-    <div class="card-head"><h2 id="h-prioridade"><%- icon('alert') %> Abertos por prioridade</h2></div>
-    <% const maxP = Math.max(1, ...Object.values(porPrioridade)); %>
-    <div class="bars">
-      <% Object.keys(PRIORIDADES).slice().reverse().forEach(function (p) { %>
-        <a class="bar-row" href="/tickets?status=ativos&prioridade=<%= p %>">
-          <span class="bar-label"><%= PRIORIDADES[p].label %></span>
-          <span class="bar-track"><span class="bar-fill fill-<%= PRIORIDADES[p].cor %>" style="--w: <%= (porPrioridade[p] / maxP) * 100 %>%"></span></span>
-          <span class="bar-value"><%= porPrioridade[p] %></span>
+      <nav class="nav" aria-label="Navegação principal">
+        <span class="nav-label">Geral</span>
+        <a href="/dashboard" class="nav-link active">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
         </a>
-      <% }) %>
-    </div>
+        <a href="/tickets" class="nav-link">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          </svg>
+          <span>Chamados</span>
+        </a>
+        <span class="nav-label">Cadastros</span>
+        <a href="/technicians" class="nav-link">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          </svg>
+          <span>Técnicos</span>
+        </a>
+        <a href="/categories" class="nav-link">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
+          </svg>
+          <span>Categorias</span>
+        </a>
+      </nav>
 
-    <div class="status-strip" aria-label="Distribuição por status">
-      <% Object.keys(STATUS).forEach(function (s) { if (!porStatus[s]) return; %>
-        <span class="strip-seg fill-<%= STATUS[s].cor %>" style="flex: <%= porStatus[s] %>" title="<%= STATUS[s].label %>: <%= porStatus[s] %>"></span>
-      <% }) %>
-    </div>
-    <ul class="legend">
-      <% Object.keys(STATUS).forEach(function (s) { %>
-        <li><span class="dot fill-<%= STATUS[s].cor %>"></span><%= STATUS[s].label %> <strong><%= porStatus[s] %></strong></li>
-      <% }) %>
-    </ul>
-  </section>
+      <a href="/tickets/new" class="btn btn-primary btn-block sidebar-cta" id="sidebar-new-ticket">+ Novo chamado</a>
+    </aside>
 
-  <section class="card" aria-labelledby="h-equipe">
-    <div class="card-head">
-      <h2 id="h-equipe"><%- icon('users') %> Carga da equipe</h2>
-      <a href="/technicians" class="link-muted">Gerenciar</a>
-    </div>
-    <% const maxT = Math.max(1, ...tecnicos.map(function (t) { return t.ativos; })); %>
-    <ul class="team">
-      <% tecnicos.forEach(function (t) { %>
-        <li>
-          <span class="avatar"><%= t.iniciais %></span>
-          <div class="team-info">
-            <div class="team-top"><strong><%= t.nome %></strong><span class="muted"><%= t.ativos %> ativos · <%= t.resolvidos %> concluídos</span></div>
-            <span class="bar-track"><span class="bar-fill fill-indigo" style="--w: <%= (t.ativos / maxT) * 100 %>%"></span></span>
-          </div>
-        </li>
-      <% }) %>
-      <% if (!tecnicos.length) { %><li class="muted">Nenhum técnico ativo cadastrado.</li><% } %>
-    </ul>
-  </section>
-
-  <section class="card" aria-labelledby="h-categorias">
-    <div class="card-head">
-      <h2 id="h-categorias"><%- icon('tag') %> Por categoria</h2>
-      <a href="/categories" class="link-muted">Gerenciar</a>
-    </div>
-    <% const maxC = Math.max(1, ...categorias.map(function (c) { return c.total; })); %>
-    <div class="bars">
-      <% categorias.forEach(function (c) { %>
-        <div class="bar-row">
-          <span class="bar-label"><span class="dot" style="background: <%= c.cor %>"></span><%= c.nome %></span>
-          <span class="bar-track"><span class="bar-fill" style="--w: <%= (c.total / maxC) * 100 %>%; background: <%= c.cor %>"></span></span>
-          <span class="bar-value"><%= c.total %></span>
+    <!-- CONTEÚDO PRINCIPAL (COM ANTI-OVERFLOW) -->
+    <main class="main">
+      <% if (typeof msg !== 'undefined' && msg) { %>
+        <div class="toast toast-success" role="status" data-toast>
+          <span><%= msg %></span>
+          <button type="button" class="toast-close" data-toast-close aria-label="Fechar">✕</button>
         </div>
-      <% }) %>
-    </div>
-  </section>
-</div>
+      <% } %>
 
-<section class="card" aria-labelledby="h-recentes">
-  <div class="card-head">
-    <h2 id="h-recentes"><%- icon('clock') %> Chamados recentes</h2>
-    <a href="/tickets" class="link-muted">Ver todos</a>
+      <!-- CABEÇALHO COM PERFIL DO USUÁRIO & LOGOUT -->
+      <header class="page-header">
+        <div>
+          <p class="eyebrow" id="headerDate"><%= typeof formatDate !== 'undefined' ? formatDate(new Date(), false) : 'Painel do Sistema' %></p>
+          <h1>Painel de Chamados</h1>
+          <p class="subtitle">Visão geral da fila de suporte em tempo real.</p>
+        </div>
+
+        <!-- Card do Usuário Autenticado -->
+        <div class="header-user-card" id="userCard">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="user-info">
+            <div class="user-name-line">
+              <span class="user-name" id="userName">Carregando...</span>
+              <span class="profile-badge badge-user" id="userBadge">user</span>
+            </div>
+            <span class="user-email" id="userEmail">autenticando...</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="openProfileModal()" title="Meu Perfil">⚙️ Perfil</button>
+          <button class="btn btn-danger btn-sm" id="btnLogout" title="Sair do sistema">Sair</button>
+        </div>
+      </header>
+
+      <!-- INDICADORES RESPONSIVOS -->
+      <section class="stats" aria-label="Indicadores">
+        <a href="/tickets?status=ativos" class="stat-card stat-indigo" id="stat-ativos">
+          <span class="stat-label">Em aberto</span>
+          <span class="stat-value" id="statAbertos"><%= typeof ativos !== 'undefined' ? ativos : '--' %></span>
+          <span class="stat-foot">chamados ativos</span>
+        </a>
+        <a href="/tickets?status=em_andamento" class="stat-card stat-amber" id="stat-andamento">
+          <span class="stat-label">Em andamento</span>
+          <span class="stat-value" id="statAndamento"><%= typeof porStatus !== 'undefined' && porStatus.em_andamento ? porStatus.em_andamento : '--' %></span>
+          <span class="stat-foot">sendo atendidos</span>
+        </a>
+        <a href="/tickets?tecnico=nenhum&status=ativos" class="stat-card stat-red" id="stat-sem-tecnico">
+          <span class="stat-label">Sem responsável</span>
+          <span class="stat-value" id="statSemTecnico"><%= typeof semTecnico !== 'undefined' ? semTecnico : '--' %></span>
+          <span class="stat-foot">precisam de atribuição</span>
+        </a>
+        <a href="/tickets?status=resolvido" class="stat-card stat-green" id="stat-resolvidos">
+          <span class="stat-label">Resolvidos</span>
+          <span class="stat-value" id="statResolvidos"><%= typeof porStatus !== 'undefined' && porStatus.resolvido ? porStatus.resolvido : '--' %></span>
+          <span class="stat-foot">concluídos com sucesso</span>
+        </a>
+      </section>
+
+      <!-- GRID DO DASHBOARD -->
+      <div class="grid-dash">
+        <section class="card">
+          <div class="card-head">
+            <h2>⚡ Fila prioritária</h2>
+            <a href="/tickets?status=ativos" class="link-muted">Ver todos</a>
+          </div>
+          <p class="muted" style="margin-top: 8px;">Acompanhamento dos chamados críticos e prioritários da fila.</p>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>👥 Carga da equipe</h2>
+            <a href="/technicians" class="link-muted">Gerenciar</a>
+          </div>
+          <p class="muted" style="margin-top: 8px;">Distribuição de chamados entre técnicos disponíveis.</p>
+        </section>
+      </div>
+
+      <!-- TABELA COM SCROLL RESPONSIVO SEGURO -->
+      <section class="card">
+        <div class="card-head">
+          <h2>🕒 Chamados recentes</h2>
+          <a href="/tickets" class="link-muted">Ver todos</a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Protocolo</th>
+                <th>Título</th>
+                <th>Solicitante</th>
+                <th>Prioridade</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ticketsRecentTable">
+              <tr>
+                <td><span class="ticket-code">#CH-00101</span></td>
+                <td>Computador não inicializa após atualização</td>
+                <td>Maria Silva (Financeiro)</td>
+                <td><span class="badge badge-red">Crítica</span></td>
+                <td><span class="status status-amber">Em andamento</span></td>
+              </tr>
+              <tr>
+                <td><span class="ticket-code">#CH-00102</span></td>
+                <td>Acesso à rede VPN intermitente</td>
+                <td>Carlos Souza (Comercial)</td>
+                <td><span class="badge badge-blue">Média</span></td>
+                <td><span class="status status-green">Resolvido</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
-  <%- include('tickets/_table', { tickets: recentes }) %>
-</section>
 
-<%- include('partials/footer') %>
+  <!-- MODAL DE PERFIL & CONFIGURAÇÕES -->
+  <div class="modal-overlay" id="profileModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeProfileModal()" aria-label="Fechar">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div class="avatar" id="modalAvatar" style="width: 46px; height: 46px; font-size: 16px;">U</div>
+        <div>
+          <h2 style="font-size: 18px; font-weight: 700;" id="modalNameTitle">Nome do Usuário</h2>
+          <span class="profile-badge badge-user" id="modalBadge">user</span>
+        </div>
+      </div>
+
+      <!-- Abas do Modal -->
+      <div class="profile-tabs">
+        <button class="tab-btn active" onclick="switchProfileTab('dados', this)">Meus Dados</button>
+        <button class="tab-btn" onclick="switchProfileTab('seguranca', this)">Segurança / Senha</button>
+      </div>
+
+      <!-- Aba 1: Dados do Perfil -->
+      <form id="formProfileData" onsubmit="handleUpdateProfile(event)">
+        <div class="field">
+          <label>E-mail (Autenticação)</label>
+          <input type="email" id="profileEmail" class="field-readonly" readonly>
+        </div>
+        <div class="field">
+          <label>Nome Completo</label>
+          <input type="text" id="profileName" required>
+        </div>
+        <div class="field">
+          <label>Setor / Departamento</label>
+          <input type="text" id="profileSetor" placeholder="Ex: Financeiro, TI, etc.">
+        </div>
+        <div class="field">
+          <label>Nível de Acesso (Perfil)</label>
+          <input type="text" id="profileRole" class="field-readonly" readonly>
+          <small class="muted" style="font-size: 11.5px; margin-top: 4px;">Alterações de perfil devem ser realizadas por um Administrador.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 14px;">Salvar Alterações</button>
+      </form>
+
+      <!-- Aba 2: Segurança (Alterar Senha) -->
+      <form id="formProfileSecurity" onsubmit="handleUpdatePassword(event)" style="display: none;">
+        <p class="muted" style="font-size: 13px; margin: 0 0 16px;">Você pode alterar sua senha abaixo ou solicitar um e-mail com link de redefinição:</p>
+        
+        <div class="field">
+          <label>Nova Senha</label>
+          <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres" minlength="6">
+        </div>
+        <div class="field">
+          <label>Confirmar Nova Senha</label>
+          <input type="password" id="confirmNewPassword" placeholder="Repita a nova senha">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 14px;">Atualizar Senha</button>
+        
+        <div style="text-align: center; margin-top: 16px;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="handleSendResetEmail()">Ou receber link de redefinição por e-mail</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts do Projeto -->
+  <script src="/js/app.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <!-- Script Modular do Dashboard & Perfil -->
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
