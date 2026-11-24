@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // -----------------------------------------------------------------
-// Initialize Firebase Admin (ensure you have the service account key).
+// Initialize Firebase Admin
 // -----------------------------------------------------------------
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(

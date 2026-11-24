@@ -1,6 +1,3 @@
-// Category Controller using Firebase Firestore
-// Replaces Sequelize implementation and shares Firebase admin init.
-
 const admin = require('firebase-admin');
 const { STATUS_ATIVOS } = require('../config/constants');
 const { validationMessages } = require('../utils/helpers');

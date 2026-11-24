@@ -1,6 +1,3 @@
-// Comment Controller using Firebase Firestore
-// Replaces Sequelize version and shares Firebase admin init.
-
 const admin = require('firebase-admin');
 const { validationMessages } = require('../utils/helpers');
 

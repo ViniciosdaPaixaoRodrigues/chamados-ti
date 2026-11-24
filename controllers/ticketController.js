@@ -1,7 +1,3 @@
-// Ticket Controller using Firebase Firestore
-// Replaces previous Sequelize implementation.
-// Shares Firebase admin initialization with dashboardController (guarded).
-
 const admin = require('firebase-admin');
 const express = require('express');
 const router = express.Router(); // not used directly here but kept for consistency
