@@ -4,11 +4,10 @@
 
 ## Informações do Aluno
 
-- **Nome:** [Seu Nome Aqui]
-- **RA:** [Seu RA Aqui]
-- **Curso:** [Seu Curso Aqui]
-- **Instituição:** [Instituição Aqui]
-- **E-mail:** [seu.email@exemplo.com]
+- **Nome:** Vinicios da Paixão Rodrigues
+- **RA:** 141058
+- **Curso:** Análise e Desenvolvimento de Sistemas
+- **Instituição:** FECAF
 
 ---
 
