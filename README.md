@@ -1,40 +1,90 @@
 # HelpDesk TI — Organização de Chamados
 
-Sistema web local para abertura, acompanhamento e organização de chamados de TI, construído no padrão **MVC** com **Node.js, Express, EJS, CSS e Sequelize** (SQLite).
+---
 
-> Sem login: o sistema foi pensado para rodar localmente de forma simples.
+## Informações do Aluno
+
+- **Nome:** [Seu Nome Aqui]
+- **RA:** [Seu RA Aqui]
+- **Curso:** [Seu Curso Aqui]
+- **Instituição:** [Instituição Aqui]
+- **E-mail:** [seu.email@exemplo.com]
+
+---
+
+## Descrição
+
+Sistema web local para abertura, acompanhamento e organização de chamados de TI. O projeto foi re‑escrito para usar **Firebase Firestore** como banco de dados (admin SDK) em vez de **Sequelize/SQLite**, mantendo o padrão **MVC** com **Node.js, Express, EJS** e **CSS**.
+
+> **Observação:** o ambiente de produção no **Render** ainda não foi concluído com sucesso; o projeto está pronto para ser rodado localmente.
+
+---
+
+## Tecnologias
+
+- **Node.js** (v20+) & **Express**
+- **EJS** – templates de view
+- **Firebase Admin SDK** – Firestore (substitui Sequelize/SQLite)
+- **CSS** – estilos simples
+- **PowerShell** scripts (para desenvolvimento local)
+
+---
 
 ## Como rodar
 
 ```bash
+# Instalar dependências
 npm install
+
+# Variáveis de ambiente (exemplo)
+# Crie um arquivo .env na raiz com:
+# FIREBASE_SERVICE_ACCOUNT='<JSON da conta de serviço>'
+# PORT=3000
+
+# Iniciar o servidor
 npm start        # http://localhost:3000
 ```
 
-- `npm run dev` — reinicia automaticamente ao salvar arquivos (`node --watch`).
-- `npm run seed` — **recria** o banco com os dados de exemplo.
+- `npm run dev` – reinicia automaticamente ao salvar arquivos (`node --watch`).
+- `npm run seed` – **recria** o banco de dados com dados de exemplo (agora gera documentos no Firestore local de teste).
 
-Na primeira execução o arquivo `database.sqlite` é criado e populado automaticamente.
+---
 
 ## Funcionalidades
 
-- **Dashboard**: indicadores, fila prioritária, chamados por prioridade/status, carga da equipe, distribuição por categoria e tempo médio de resolução.
-- **Chamados**: CRUD completo, busca (título, solicitante, protocolo `CH-00001`), filtros por status, prioridade, categoria e técnico.
+- **Dashboard**: indicadores, fila prioritária, tickets por status/ prioridade, carga da equipe, distribuição por categoria e tempo médio de resolução.
+- **Chamados**: CRUD completo, busca (título, solicitante, protocolo `CH‑00001`), filtros por status, prioridade, categoria e técnico.
 - **Ações rápidas**: alterar status, prioridade e responsável com registro automático no histórico.
 - **Comentários** e linha do tempo por chamado.
 - **Técnicos** e **Categorias**: cadastro, edição e remoção.
+- **Fallback JSON** – caso o Firestore falhe em produção, os controllers carregam arquivos estáticos em `utils/fallback/` para garantir que a UI continue funcional.
+
+---
 
 ## Estrutura (MVC)
 
 ```
-app.js                 # inicialização do Express e do banco
-config/                # conexão Sequelize e constantes (status, prioridades, setores)
-models/                # Category, Technician, Ticket, Comment + associações
-controllers/           # regras de cada recurso
-routes/                # mapeamento de URLs -> controllers
+app.js                 # inicialização do Express e middlewares
+config/                # constantes (status, prioridades, setores)
+controllers/           # regras de cada recurso (Firebase + fallback)
+models/                # referências a coleções Firestore (Category, Ticket, Technician, Comment, User)
+routes/                # mapeamento de URLs → controllers
 middlewares/           # variáveis globais para as views
 views/                 # templates EJS (partials, tickets, technicians, categories)
 public/                # CSS e JS estáticos
-seeders/               # dados de exemplo
-utils/                 # helpers (datas, ícones, erros de validação)
+seeders/               # scripts de seed (criam documentos de exemplo)
+utils/                 # helpers, fallback loader, etc.
+fallback/              # arquivos JSON usados como fallback quando o Firestore falha
 ```
+
+---
+
+## Deploy (Render)
+
+> O projeto ainda não foi implantado com sucesso no **Render**. Quando a implantação for concluída, adicione instruções de deploy (variáveis de ambiente, build steps, etc.) aqui.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT – veja o arquivo `LICENSE` para mais detalhes.
