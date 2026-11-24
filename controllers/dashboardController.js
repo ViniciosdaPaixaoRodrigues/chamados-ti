@@ -6,15 +6,12 @@ const router = express.Router();
 // Initialize Firebase Admin (ensure you have the service account key).
 // -----------------------------------------------------------------
 if (!admin.apps.length) {
-  // Option 1: use GOOGLE_APPLICATION_CREDENTIALS env var
-  // admin.initializeApp();
+  const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT
+  );
 
-  // Option 2: explicit path (replace with your own file)
-  const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT
-    || './serviceAccountKey.json'; // adjust as needed
   admin.initializeApp({
-    credential: admin.credential.cert(require(serviceAccountPath)),
-    // You can also set `databaseURL` if you use the Realtime DB.
+    credential: admin.credential.cert(serviceAccount)
   });
 }
 
