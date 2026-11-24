@@ -15,7 +15,7 @@
 
 Sistema web local para abertura, acompanhamento e organização de chamados de TI. O projeto foi re‑escrito para usar **Firebase Firestore** como banco de dados (admin SDK) em vez de **Sequelize/SQLite**, mantendo o padrão **MVC** com **Node.js, Express, EJS** e **CSS**.
 
-> **Observação:** o ambiente de produção no **Render** ainda não foi concluído com sucesso; o projeto está pronto para ser rodado localmente.
+> **Observação:** Link do Render: https://chamados-ti-hqqw.onrender.com/
 
 ---
 
