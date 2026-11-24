@@ -1,7 +1,6 @@
 const path = require('path');
 const express = require('express');
 const methodOverride = require('method-override');
-const { sequelize } = require('./models');
 const routes = require('./routes');
 const locals = require('./middlewares/locals');
 const seed = require('./seeders/seed');
