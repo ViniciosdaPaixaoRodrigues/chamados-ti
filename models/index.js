@@ -1,17 +1,20 @@
-const sequelize = require('../config/database');
-const Category = require('./Category');
-const Technician = require('./Technician');
-const Ticket = require('./Ticket');
-const Comment = require('./Comment');
+// Firestore model wrappers – replaces Sequelize definitions
+// Each model exports the Firestore collection reference for the corresponding entity.
 
-// ---------- Associações ----------
-Category.hasMany(Ticket, { foreignKey: 'categoryId', as: 'tickets', onDelete: 'SET NULL' });
-Ticket.belongsTo(Category, { foreignKey: 'categoryId', as: 'categoria' });
+const admin = require('firebase-admin');
+if (!admin.apps.length) {
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
-Technician.hasMany(Ticket, { foreignKey: 'technicianId', as: 'tickets', onDelete: 'SET NULL' });
-Ticket.belongsTo(Technician, { foreignKey: 'technicianId', as: 'tecnico' });
+const db = admin.firestore();
 
-Ticket.hasMany(Comment, { foreignKey: 'ticketId', as: 'comentarios', onDelete: 'CASCADE' });
-Comment.belongsTo(Ticket, { foreignKey: 'ticketId', as: 'chamado' });
-
-module.exports = { sequelize, Category, Technician, Ticket, Comment };
+module.exports = {
+  Category: db.collection('categorias'),
+  Ticket: db.collection('chamados'),
+  Technician: db.collection('tecnicos'),
+  Comment: db.collection('comentarios'),
+  User: db.collection('usuarios'),
+};
