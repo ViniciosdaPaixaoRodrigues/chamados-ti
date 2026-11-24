@@ -9,15 +9,13 @@
     "start": "node app.js",
     "prestart": "node seeders/seed.js",
     "build": "npm rebuild sqlite3 --build-from-source",
-    "dev": "node --watch app.js",
-    "seed": "node seeders/seed.js"
+    "dev": "node --watch app.js"
   },
   "keywords": [
     "helpdesk",
     "chamados",
     "ti",
     "express",
-    "sequelize",
     "ejs"
   ],
   "license": "MIT",
