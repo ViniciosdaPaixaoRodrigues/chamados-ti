@@ -2,8 +2,6 @@
 // Shares Firebase admin init with other controllers.
 
 const admin = require('../utils/firebaseInit');
-const express = require('express');
-const router = express.Router();
 const { loadFallback } = require('../utils/fallback');
 
 const db = admin.firestore();
@@ -30,7 +28,7 @@ async function buildStats(userUid, userPerfil) {
 }
 
 // GET /dashboard/data – returns stats and recent tickets
-router.get('/data', async (req, res) => {
+async function index(req, res) {
   try {
     const user = req.user;
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
@@ -51,10 +49,10 @@ router.get('/data', async (req, res) => {
     if (fallback) return res.json(fallback);
     res.status(500).json({ error: err.message });
   }
-});
+}
 
 // GET /dashboard/user – returns logged‑in user profile
-router.get('/user', async (req, res) => {
+async function user(req, res) {
   try {
     const user = req.user;
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
@@ -74,6 +72,6 @@ router.get('/user', async (req, res) => {
     if (fallback) return res.json(fallback);
     res.status(500).json({ error: err.message });
   }
-});
+}
 
-module.exports = router;
+module.exports = { index, user };

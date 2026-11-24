@@ -10,8 +10,11 @@ const router = express.Router();
 // Home
 router.get('/', (req, res) => res.render('home', { title: 'HelpDesk TI' }));
 
-// Dashboard
-router.get('/dashboard', dashboard.index);
+// Dashboard page (renders view)
+router.get('/dashboard', (req, res) => res.render('dashboard', { title: 'Dashboard' }));
+// Dashboard data endpoints
+router.get('/dashboard/data', dashboard.index);
+router.get('/dashboard/user', dashboard.user);
 
 // Chamados
 router.get('/tickets', (req, res) => res.render('tickets/index', { title: 'Chamados' }));
