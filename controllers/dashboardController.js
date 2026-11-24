@@ -1,18 +1,11 @@
 // Dashboard Controller using Firebase Firestore with fallback JSON support
 // Shares Firebase admin init with other controllers.
 
-const admin = require('firebase-admin');
+const admin = require('../utils/firebaseInit');
 const express = require('express');
 const router = express.Router();
 const { loadFallback } = require('../utils/fallback');
 
-// Initialize Firebase Admin only once (shared)
-if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
 const db = admin.firestore();
 
 // Helper: builds a summary object for the dashboard cards.
@@ -31,7 +24,6 @@ async function buildStats(userUid, userPerfil) {
     };
   } catch (e) {
     console.error('buildStats fallback error:', e);
-    // Fallback JSON file
     const fb = loadFallback('dashboardStats.json');
     return fb || { abertos: 0, emAndamento: 0, semTecnico: 0, resolvidos: 0 };
   }
