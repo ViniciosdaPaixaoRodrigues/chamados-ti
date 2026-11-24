@@ -1,6 +1,10 @@
+// Category Controller using Firebase Firestore with fallback JSON support
+// Replaces Sequelize implementation and shares Firebase admin init.
+
 const admin = require('firebase-admin');
 const { STATUS_ATIVOS } = require('../config/constants');
 const { validationMessages } = require('../utils/helpers');
+const { loadFallback } = require('../utils/fallback');
 
 // Initialize Firebase Admin if not already done (same as dashboardController)
 if (!admin.apps.length) {
@@ -9,7 +13,6 @@ if (!admin.apps.length) {
     credential: admin.credential.cert(serviceAccount),
   });
 }
-
 const db = admin.firestore();
 
 function pick(body) {
@@ -39,23 +42,30 @@ async function computeStats(categoryId) {
   return { total, ativos };
 }
 
-// GET /categories – list categories with ticket stats
+// GET /categories – list categories with ticket stats (fallback on error)
 exports.index = async (req, res) => {
-  const catSnap = await db.collection('categorias').orderBy('nome', 'asc').get();
-  const categorias = [];
-  for (const doc of catSnap.docs) {
-    const data = doc.data();
-    const stats = await computeStats(doc.id);
-    categorias.push({
-      id: doc.id,
-      nome: data.nome,
-      descricao: data.descricao,
-      cor: data.cor,
-      total: stats.total,
-      ativos: stats.ativos,
-    });
+  try {
+    const catSnap = await db.collection('categorias').orderBy('nome', 'asc').get();
+    const categorias = [];
+    for (const doc of catSnap.docs) {
+      const data = doc.data();
+      const stats = await computeStats(doc.id);
+      categorias.push({
+        id: doc.id,
+        nome: data.nome,
+        descricao: data.descricao,
+        cor: data.cor,
+        total: stats.total,
+        ativos: stats.ativos,
+      });
+    }
+    return res.render('categories/index', { title: 'Categorias', categorias });
+  } catch (err) {
+    console.error('Category index error:', err);
+    const fallback = loadFallback('categoriesIndex.json');
+    if (fallback) return res.render('categories/index', { title: 'Categorias', categorias: fallback });
+    return res.status(500).render('500', { error: err.message });
   }
-  res.render('categories/index', { title: 'Categorias', categorias });
 };
 
 // GET /categories/new – render creation form
@@ -75,40 +85,51 @@ exports.create = async (req, res) => {
 
 // GET /categories/:id/edit – render edit form
 exports.edit = async (req, res) => {
-  const doc = await db.collection('categorias').doc(req.params.id).get();
-  if (!doc.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
-  const categoria = { id: doc.id, ...doc.data() };
-  renderForm(res, { categoria, isEdit: true });
+  try {
+    const doc = await db.collection('categorias').doc(req.params.id).get();
+    if (!doc.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
+    const categoria = { id: doc.id, ...doc.data() };
+    renderForm(res, { categoria, isEdit: true });
+  } catch (err) {
+    console.error('Category edit error:', err);
+    const fallback = loadFallback('categoryEdit.json');
+    if (fallback) return renderForm(res, { categoria: fallback, isEdit: true });
+    return res.status(500).render('500', { error: err.message });
+  }
 };
 
 // PUT /categories/:id – update category
 exports.update = async (req, res) => {
-  const ref = db.collection('categorias').doc(req.params.id);
-  const snap = await ref.get();
-  if (!snap.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
-  const data = pick(req.body);
   try {
+    const ref = db.collection('categorias').doc(req.params.id);
+    const snap = await ref.get();
+    if (!snap.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
+    const data = pick(req.body);
     await ref.update(data);
     res.redirect(`/categories?msg=${encodeURIComponent('Categoria atualizada.')}`);
   } catch (err) {
     const errors = [{ msg: err.message }];
-    const categoria = { id: req.params.id, ...data };
+    const categoria = { id: req.params.id, ...pick(req.body) };
     renderForm(res, { categoria, errors, isEdit: true, status: 422 });
   }
 };
 
 // DELETE /categories/:id – remove category and detach tickets
 exports.destroy = async (req, res) => {
-  const ref = db.collection('categorias').doc(req.params.id);
-  const snap = await ref.get();
-  if (!snap.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
-  // Set categoryId null on tickets referencing this category
-  const ticketsSnap = await db.collection('chamados').where('categoriaId', '==', req.params.id).get();
-  const batch = db.batch();
-  ticketsSnap.forEach(doc => batch.update(doc.ref, { categoriaId: null }));
-  batch.delete(ref);
-  await batch.commit();
-  res.redirect(`/categories?msg=${encodeURIComponent('Categoria removida.')}`);
+  try {
+    const ref = db.collection('categorias').doc(req.params.id);
+    const snap = await ref.get();
+    if (!snap.exists) return res.status(404).render('404', { title: 'Categoria não encontrada' });
+    const ticketsSnap = await db.collection('chamados').where('categoriaId', '==', req.params.id).get();
+    const batch = db.batch();
+    ticketsSnap.forEach(doc => batch.update(doc.ref, { categoriaId: null }));
+    batch.delete(ref);
+    await batch.commit();
+    res.redirect(`/categories?msg=${encodeURIComponent('Categoria removida.')}`);
+  } catch (err) {
+    console.error('Category destroy error:', err);
+    res.status(500).render('500', { error: err.message });
+  }
 };
 
 module.exports = exports;
