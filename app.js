@@ -3,7 +3,6 @@ const express = require('express');
 const methodOverride = require('method-override');
 const routes = require('./routes');
 const locals = require('./middlewares/locals');
-const seed = require('./seeders/seed');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
